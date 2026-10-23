@@ -1,9 +1,9 @@
-import { compute, normalizeNumber, parseDecimal } from './math.mjs';
+import { compute, normalizeNumber, parseDecimal } from './math.mjs?v=2';
 
-const defaults = { buy: '1.56', quantity: '3', sell: '1.85', target: '25', tick: '0.01', feeMode: 'both', mode: 'sell' };
+const defaults = { commission: '1.725', buy: '1.56', quantity: '3', sell: '1.85', target: '25', tick: '0.01', feeMode: 'both', mode: 'sell' };
 const storageKey = 'options-profit-calculator:v1';
 const byId = id => document.getElementById(id);
-const ids = ['buy', 'quantity', 'sell', 'target', 'tick'];
+const ids = ['buy', 'quantity', 'sell', 'target', 'tick', 'commission'];
 const integerFormatter = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
 const priceFormatter = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
 const percentFormatter = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -47,7 +47,7 @@ function setMode(next, shouldRender = true) {
 function render() {
   const raw = getRaw();
   current = compute(raw);
-  for (const id of ['buy', 'quantity', 'sell', 'target']) {
+  for (const id of ['buy', 'quantity', 'sell', 'target', 'commission']) {
     const message = current.errors[id];
     byId(id).setAttribute('aria-invalid', String(Boolean(message)));
     byId(`${id}-error`).hidden = !message;
@@ -57,8 +57,8 @@ function render() {
     button.setAttribute('aria-pressed', String(normalizeNumber(raw.target) !== '' && Number(normalizeNumber(raw.target)) === Number(button.dataset.target)));
   }
   text('fee-explanation', raw.feeMode === 'both'
-    ? '2.29 دولار عند الشراء + 2.29 دولار عند البيع، لكل عقد.'
-    : '2.29 دولار لكل عقد للشراء والبيع معًا، تُخصم مرة واحدة فقط.');
+    ? `تقدير: ${normalizeNumber(raw.commission)} دولار لكل عقد عند الشراء ومثلها عند البيع. رسوم البيع مفترضة وقد تختلف.`
+    : `تقدير: ${normalizeNumber(raw.commission)} دولار لكل عقد للصفقة كاملة.`);
   byId('decrease').disabled = parseDecimal(raw.quantity, 0) === 1n;
   byId('increase').disabled = parseDecimal(raw.quantity, 0) === 100000n;
   const card = byId('result-card');
@@ -94,7 +94,7 @@ function render() {
   text('sale-value', money(result.saleCents));
   text('gross-value', money(result.grossCents));
   text('fee-value', `−${money(result.feeCents)}`);
-  text('fee-detail', `${integerFormatter.format(current.values.quantity)} × ${raw.feeMode === 'both' ? '2 × ' : ''}$2.29`);
+  text('fee-detail', `${integerFormatter.format(current.values.quantity)} × ${raw.feeMode === 'both' ? '2 × ' : ''}${normalizeNumber(raw.commission)}`);
   text('net-value', money(result.netCents));
   text('breakeven-value', `$${price(result.breakEvenUnits)}`);
   text('breakeven-note', `أقل سعر بخطوة ${raw.tick} يغطي العقود والعمولات.`);
@@ -149,7 +149,7 @@ byId('copy-result').addEventListener('click', async () => {
     `سعر الشراء: $${price(current.values.buyUnits)}`,
     `سعر البيع: $${price(result.sellUnits)}`,
     `عدد العقود: ${current.values.quantity} | المضاعف: 100`,
-    `العمولة: $2.29 لكل عقد ${raw.feeMode === 'both' ? 'عند الشراء وعند البيع' : 'للصفقة كاملة'}`,
+    `العمولة: ${normalizeNumber(raw.commission)} لكل عقد ${raw.feeMode === 'both' ? 'عند الشراء وعند البيع' : 'للصفقة كاملة'}`,
     `إجمالي العمولة: ${money(result.feeCents)}`,
     `صافي الربح / الخسارة: ${money(result.netCents)}`,
     `العائد الصافي: ${percent(result.returnPct)} من قيمة الشراء قبل العمولة`,
