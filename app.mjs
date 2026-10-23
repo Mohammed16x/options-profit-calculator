@@ -190,7 +190,7 @@ let saved = defaults;
 try {
   const parsed = JSON.parse(window.localStorage.getItem(storageKey) ?? 'null');
   if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-    const candidate = { ...defaults, ...parsed };
+    const candidate = { ...defaults, ...parsed, platform: parsed.platform ?? (Number(parsed.commission ?? defaults.commission) === 2.29 ? 'lite' : Number(parsed.commission ?? defaults.commission) === 1.725 ? 'pro' : 'custom') };
     if (compute(candidate).result) saved = candidate;
   }
 } catch {}
