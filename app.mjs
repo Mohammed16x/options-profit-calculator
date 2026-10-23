@@ -16,6 +16,11 @@ function amount(cents) {
   const absolute = cents < 0n ? -cents : cents;
   return `${cents < 0n ? '−' : ''}${integerFormatter.format(absolute / 100n)}.${String(absolute % 100n).padStart(2, '0')}`;
 }
+function sar(cents) {
+  const absolute = cents < 0n ? -cents : cents;
+  const halalas = (absolute * 375n + 50n) / 100n;
+  return amount(cents < 0n ? -halalas : halalas) + ' ر.س';
+}
 function money(cents) {
   const value = amount(cents);
   return value.startsWith('−') ? `−$${value.slice(1)}` : `$${value}`;
@@ -69,6 +74,7 @@ function render() {
   byId('result-error').hidden = Boolean(current.result);
   if (!current.result) {
     card.classList.remove('loss');
+    if (byId('net-sar')) text('net-sar', '—');
     for (const id of ['headline', 'return-badge', 'buy-value', 'sale-value', 'gross-value', 'fee-value', 'net-value', 'breakeven-value']) text(id, '—');
     text('result-title', mode === 'target' ? 'سعر البيع لتحقيق هدفك' : 'صافي الربح بعد العمولة');
     text('fee-detail', '');
@@ -98,6 +104,7 @@ function render() {
   text('fee-value', `−${money(result.feeCents)}`);
   text('fee-detail', `${integerFormatter.format(current.values.quantity)} × ${raw.feeMode === 'both' ? '2 × ' : ''}${normalizeNumber(raw.commission)}`);
   text('net-value', money(result.netCents));
+  if (byId('net-sar')) text('net-sar', sar(result.netCents));
   text('breakeven-value', `$${price(result.breakEvenUnits)}`);
   text('breakeven-note', `أقل سعر بخطوة ${raw.tick} يغطي العقود والعمولات.`);
   save(raw);
@@ -167,6 +174,7 @@ byId('copy-result').addEventListener('click', async () => {
     `العمولة: ${normalizeNumber(raw.commission)} لكل عقد ${raw.feeMode === 'both' ? 'عند الشراء وعند البيع' : 'للصفقة كاملة'}`,
     `إجمالي العمولة: ${money(result.feeCents)}`,
     `صافي الربح / الخسارة: ${money(result.netCents)}`,
+    `بالريال السعودي: ${sar(result.netCents)} (1 دولار = 3.75 ريال، دون رسوم تحويل)`,
     `العائد الصافي: ${percent(result.returnPct)} من قيمة الشراء قبل العمولة`,
     ...(mode === 'target' ? [`الهدف: ${normalizeNumber(raw.target)}% | خطوة تقريب سعر البيع: $${raw.tick}`] : [])
   ].join('\n');
