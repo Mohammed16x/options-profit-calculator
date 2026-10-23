@@ -8,8 +8,8 @@
   <title>حاسبة ربح العقود</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./style.css">
-  <script type="module" src="./app.mjs?v=3"></script>
-<style>.platform-fee-row{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:12px;align-items:start}.platform-fee-row .field{min-width:0}.platform-fee-row select{width:100%;min-width:0;height:60px;border:1px solid #dbe3dc;border-radius:14px;background:#fff;color:#18372d;padding:0 8px;font:inherit;font-size:13px}.platform-fee-row label{font-size:12px}.platform-fee-row input{width:100%;min-width:0}</style></head>
+  <script type="module" src="./app.mjs?v=4"></script>
+<style>.platform-fee-row{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:12px;align-items:start}.platform-fee-row .field{min-width:0}.platform-fee-row select{width:100%;min-width:0;height:60px;border:1px solid #dbe3dc;border-radius:14px;background:#fff;color:#18372d;padding:0 8px;font:inherit;font-size:13px}.platform-fee-row label{font-size:12px}.platform-fee-row input{width:100%;min-width:0}</style><style>.net-sar{display:block;font-size:15px;font-weight:500;line-height:1.6;margin-top:5px;color:#c5d5c8;text-align:left}</style></head>
 <body>
   <a class="skip-link" href="#calculator">انتقل إلى الحاسبة</a>
   <div class="page-shell">
@@ -81,14 +81,14 @@
               <div><dt>قيمة بيع العقود</dt><dd id="sale-value" dir="ltr">$555.00</dd></div>
               <div><dt>الربح قبل العمولة</dt><dd id="gross-value" dir="ltr">$87.00</dd></div>
               <div class="fee-line"><dt>إجمالي العمولة <span id="fee-detail">3 × 2 × $1.725</span></dt><dd id="fee-value" dir="ltr">−$10.35</dd></div>
-              <div class="net-row"><dt>صافي الربح / الخسارة</dt><dd id="net-value" dir="ltr">$76.65</dd></div>
+              <div class="net-row"><dt>صافي الربح / الخسارة</dt><dd dir="ltr"><span id="net-value">$76.65</span><small id="net-sar" class="net-sar" dir="rtl">287.44 ر.س</small></dd></div>
             </dl>
             <p class="result-error" id="result-error" hidden>أكمل الحقول بالأرقام الصحيحة لعرض النتيجة.</p>
             <button type="button" class="copy-button" id="copy-result"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="7" y="6" width="9" height="11" rx="2"/><path d="M12 6V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h1"/></svg><span id="copy-label">نسخ ملخص الصفقة</span></button>
           </section>
 
           <section class="breakeven-card card" aria-labelledby="breakeven-heading"><div class="balance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16M7 8l-4 4 4 4m10-8 4 4-4 4"/></svg></div><div><h2 id="breakeven-heading">سعر التعادل بعد العمولة</h2><p id="breakeven-note">أقل سعر مقرب يغطي تكلفة العقود والعمولات.</p></div><strong id="breakeven-value" dir="ltr">$1.60</strong></section>
-          <p class="result-footnote">نسبة العائد = صافي الربح ÷ قيمة الشراء قبل العمولة.<br>الأسعار المستهدفة تُقرّب للأعلى حسب الخطوة المختارة.</p>
+          <p class="result-footnote">نسبة العائد = صافي الربح ÷ قيمة الشراء قبل العمولة.<br>الأسعار المستهدفة تُقرّب للأعلى حسب الخطوة المختارة.<br>التحويل للريال: 1 دولار = 3.75 ريال، دون رسوم تحويل.</p>
         </aside>
       </div>
 
