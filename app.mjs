@@ -1,6 +1,7 @@
 import { compute, normalizeNumber, parseDecimal } from './math.mjs?v=2';
 
-const defaults = { commission: '1.725', buy: '1.56', quantity: '3', sell: '1.85', target: '25', tick: '0.01', feeMode: 'both', mode: 'sell' };
+const platformRates = { lite: '2.29', pro: '1.725' };
+const defaults = { platform: 'pro', commission: '1.725', buy: '1.56', quantity: '3', sell: '1.85', target: '25', tick: '0.01', feeMode: 'both', mode: 'sell' };
 const storageKey = 'options-profit-calculator:v1';
 const byId = id => document.getElementById(id);
 const ids = ['buy', 'quantity', 'sell', 'target', 'tick', 'commission'];
@@ -26,6 +27,7 @@ function text(id, value) { byId(id).textContent = value; }
 function getRaw() {
   return Object.fromEntries([
     ...ids.map(id => [id, byId(id).value]),
+    ['platform', byId('platform')?.value ?? 'pro'],
     ['mode', mode],
     ['feeMode', document.querySelector('input[name="fee-mode"]:checked')?.value ?? 'both']
   ]);
@@ -102,6 +104,7 @@ function render() {
 }
 
 function hydrate(values) {
+  if (byId('platform')) byId('platform').value = ['lite', 'pro', 'custom'].includes(values.platform) ? values.platform : Number(values.commission) === 2.29 ? 'lite' : Number(values.commission ?? defaults.commission) === 1.725 ? 'pro' : 'custom';
   for (const id of ids) byId(id).value = typeof values[id] === 'string' ? values[id] : defaults[id];
   if (!['0.01', '0.05', '0.10'].includes(byId('tick').value)) byId('tick').value = '0.01';
   for (const input of document.querySelectorAll('input[name="fee-mode"]')) input.checked = input.value === (values.feeMode === 'once' ? 'once' : 'both');
@@ -116,6 +119,17 @@ function toast(message) {
   toastTimer = setTimeout(() => { byId('toast').hidden = true; }, 2600);
 }
 
+byId('platform')?.addEventListener('change', () => {
+  const rate = platformRates[byId('platform').value];
+  if (rate) byId('commission').value = rate;
+  render();
+});
+byId('commission').addEventListener('input', () => {
+  if (byId('platform')) {
+    byId('platform').value = Object.keys(platformRates).find(key => Number(platformRates[key]) === Number(normalizeNumber(byId('commission').value))) ?? 'custom';
+    render();
+  }
+});
 for (const id of ids) byId(id).addEventListener(id === 'tick' ? 'change' : 'input', render);
 for (const input of document.querySelectorAll('input[name="fee-mode"]')) input.addEventListener('change', render);
 for (const button of document.querySelectorAll('[data-mode]')) {
@@ -146,6 +160,7 @@ byId('copy-result').addEventListener('click', async () => {
   const result = current.result;
   const summary = [
     'ملخص صفقة الأوبشن',
+    `المنصة: ${raw.platform === 'lite' ? 'Riyad Global Lite' : raw.platform === 'pro' ? 'Riyad Global Pro' : 'مخصص'}`,
     `سعر الشراء: $${price(current.values.buyUnits)}`,
     `سعر البيع: $${price(result.sellUnits)}`,
     `عدد العقود: ${current.values.quantity} | المضاعف: 100`,
