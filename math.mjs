@@ -1,5 +1,5 @@
 export const CONTRACT_MULTIPLIER = 100;
-export const COMMISSION_CENTS = 229;
+export const DEFAULT_COMMISSION = '1.725';
 
 export function normalizeNumber(value) {
   return String(value ?? '').trim()
@@ -20,6 +20,8 @@ export function parseDecimal(value, places = 4) {
 
 export function validate(raw) {
   const errors = {};
+  const commissionUnits = parseDecimal(raw.commission ?? DEFAULT_COMMISSION);
+  if (commissionUnits === null || commissionUnits > 10000000n) errors.commission = 'أدخل عمولة من صفر إلى 1000 دولار، بحد أقصى 4 منازل عشرية.';
   const buyUnits = parseDecimal(raw.buy);
   const quantity = parseDecimal(raw.quantity, 0);
   if (buyUnits === null || buyUnits <= 0n || buyUnits > 1000000000n)
@@ -37,7 +39,7 @@ export function validate(raw) {
     errors.target = 'أدخل نسبة من 0% إلى 10,000%، بحد أقصى منزلتين عشريتين.';
   if (![100n, 500n, 1000n].includes(tickUnits)) errors.tick = 'اختر خطوة سعر صالحة.';
   if (Object.keys(errors).length) return { errors, values: null };
-  return { errors, values: { buyUnits, quantity, sellUnits, targetBps, tickUnits, feeMode: raw.feeMode, mode: raw.mode } };
+  return { errors, values: { commissionUnits, buyUnits, quantity, sellUnits, targetBps, tickUnits, feeMode: raw.feeMode, mode: raw.mode } };
 }
 
 const ceilDiv = (value, divisor) => (value + divisor - 1n) / divisor;
@@ -46,7 +48,7 @@ export function calculate(values) {
   const { buyUnits, quantity, feeMode, mode, tickUnits, targetBps } = values;
   // At a 100 multiplier, premium units (1/10,000 USD) × quantity = position cents.
   const buyCents = buyUnits * quantity;
-  const feeCents = BigInt(COMMISSION_CENTS) * quantity * (feeMode === 'both' ? 2n : 1n);
+  const feeCents = ((values.commissionUnits ?? parseDecimal(DEFAULT_COMMISSION)) * quantity * (feeMode === 'both' ? 2n : 1n) + 50n) / 100n;
   const breakEvenNumerator = buyCents + feeCents;
   const breakEvenUnits = ceilDiv(breakEvenNumerator, quantity * tickUnits) * tickUnits;
   let sellUnits = values.sellUnits;
