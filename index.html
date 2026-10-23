@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#142d27">
+  <meta name="description" content="احسب صافي ربح عقود الأوبشن بعد العمولة، وحدد سعر البيع الذي يحقق نسبة الربح المستهدفة.">
+  <title>حاسبة ربح العقود</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <a class="skip-link" href="#calculator">انتقل إلى الحاسبة</a>
+  <div class="page-shell">
+    <header class="topbar">
+      <a href="./" class="brand" aria-label="حاسبة العقود، الصفحة الرئيسية">
+        <span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M8.5 7h7M9 11h.01M15 11h.01M9 15h.01M15 15h.01M9 18h.01M15 18h.01"/></svg></span>
+        <span>حاسبة العقود<small>أرقام واضحة. قرار محسوب.</small></span>
+      </a>
+      <div class="currency-pill"><span class="currency-dot" aria-hidden="true"></span><span>دولار أمريكي</span><b dir="ltr">USD</b></div>
+    </header>
+
+    <main id="calculator">
+      <section class="intro" aria-labelledby="page-title">
+        <div><p class="eyebrow">أداة حساب الأوبشن</p><h1 id="page-title">اعرف صافي ربحك.</h1><p class="intro-copy">أدخل تفاصيل الصفقة، أو اختر نسبة الربح لنحسب لك سعر البيع.</p></div>
+        <button type="button" id="reset-example" class="text-button"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 10a8 8 0 1 1 1.6 7M4 4v6h6"/></svg>تحميل المثال</button>
+      </section>
+
+      <div class="calculator-grid">
+        <section class="input-card card" aria-labelledby="trade-heading">
+          <div class="section-heading"><div><span class="section-index">01</span><h2 id="trade-heading">تفاصيل الصفقة</h2></div><span class="micro-tag">المضاعف ×100</span></div>
+          <div class="buy-fields">
+            <div class="field">
+              <label for="buy">سعر شراء العقد</label>
+              <div class="input-wrap"><span class="input-unit">$</span><input id="buy" name="buy" type="text" inputmode="decimal" dir="ltr" autocomplete="off" spellcheck="false" value="1.56" placeholder="1.56" aria-describedby="buy-help buy-error"></div>
+              <small class="field-hint" id="buy-help">سعر العقد الظاهر في المنصة</small><p class="error" id="buy-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="quantity">عدد العقود</label>
+              <div class="quantity-control"><button type="button" id="decrease" aria-label="تقليل عدد العقود">−</button><input id="quantity" name="quantity" type="text" inputmode="numeric" dir="ltr" value="3" autocomplete="off" aria-describedby="quantity-help quantity-error"><button type="button" id="increase" aria-label="زيادة عدد العقود">+</button></div>
+              <small class="field-hint" id="quantity-help">نفس الكمية عند البيع</small><p class="error" id="quantity-error" hidden></p>
+            </div>
+          </div>
+
+          <div class="commission-box">
+            <div class="commission-top"><div><span class="label">عمولة العقد الواحد</span><span class="fixed-badge"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="4" y="7" width="8" height="6" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>ثابتة</span></div><strong dir="ltr">$2.29</strong></div>
+            <fieldset class="fee-fieldset"><legend>طريقة احتساب العمولة</legend><div class="fee-options"><label><input type="radio" name="fee-mode" value="both" checked><span>لكل عملية شراء وبيع</span></label><label><input type="radio" name="fee-mode" value="once"><span>للصفقة كاملة</span></label></div></fieldset>
+            <p class="fee-explanation" id="fee-explanation">2.29 دولار عند الشراء + 2.29 دولار عند البيع، لكل عقد.</p>
+          </div>
+
+          <div class="section-heading second-heading"><div><span class="section-index">02</span><h2>ماذا تريد أن تحسب؟</h2></div></div>
+          <div class="mode-switch" role="tablist" aria-label="طريقة الحساب">
+            <button type="button" id="tab-sell" role="tab" aria-selected="true" aria-controls="panel-sell" tabindex="0" data-mode="sell"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M12.5 6.5c0-1-1.1-1.75-2.5-1.75S7.5 5.5 7.5 6.5 8.6 8 10 8s2.5.75 2.5 1.75S11.4 11.5 10 11.5s-2.5-.75-2.5-1.75M10 3.5v9.25M3.5 16.5h13"/></svg>أدخل سعر البيع</button>
+            <button type="button" id="tab-target" role="tab" aria-selected="false" aria-controls="panel-target" tabindex="-1" data-mode="target"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="3"/><path d="m10 10 7-7"/></svg>حدد نسبة الربح</button>
+          </div>
+
+          <div id="panel-sell" role="tabpanel" aria-labelledby="tab-sell" class="mode-panel">
+            <div class="field"><label for="sell">سعر بيع العقد</label><div class="input-wrap large-input"><span class="input-unit">$</span><input id="sell" name="sell" type="text" inputmode="decimal" dir="ltr" value="1.85" placeholder="1.85" autocomplete="off" spellcheck="false" aria-describedby="sell-help sell-error"></div><p class="error" id="sell-error" hidden></p><small class="field-hint" id="sell-help">تتحدث النتيجة تلقائيًا مع كل تغيير.</small></div>
+          </div>
+
+          <div id="panel-target" role="tabpanel" aria-labelledby="tab-target" class="mode-panel" hidden>
+            <label class="standalone-label" for="target">نسبة الربح الصافي المستهدفة</label>
+            <div class="target-presets" aria-label="نسب ربح جاهزة"><button type="button" data-target="10" aria-pressed="false">10<span>%</span></button><button type="button" data-target="15" aria-pressed="false">15<span>%</span></button><button type="button" data-target="25" aria-pressed="true">25<span>%</span></button></div>
+            <div class="target-custom"><label for="target">أو أدخل نسبة أخرى</label><div class="input-wrap"><span class="input-unit">%</span><input id="target" name="target" type="text" inputmode="decimal" dir="ltr" value="25" autocomplete="off" aria-describedby="target-help target-error"></div></div>
+            <p class="error" id="target-error" hidden></p>
+            <p class="field-hint" id="target-help">بعد خصم العمولة، كنسبة من قيمة شراء العقود قبل العمولة.</p>
+          </div>
+          <div class="rounding-row"><label for="tick">خطوة تقريب سعر البيع <span>للأهداف والتعادل</span></label><select id="tick" name="tick" dir="ltr"><option value="0.01">$0.01</option><option value="0.05">$0.05</option><option value="0.10">$0.10</option></select></div>
+        </section>
+
+        <aside class="results-column" aria-label="نتيجة الحساب">
+          <section class="result-card" id="result-card" aria-live="polite" aria-atomic="true">
+            <div class="result-topline"><span id="result-title">صافي الربح بعد العمولة</span><span class="result-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m5 16 6-6 4 4 5-8M15 6h5v5"/></svg></span></div>
+            <div class="headline-number" dir="ltr"><span class="dollar">$</span><span id="headline">73.26</span></div>
+            <div class="result-subline"><span class="return-badge" id="return-badge" dir="ltr">+15.65%</span><span id="return-label">عائد صافٍ على قيمة الشراء</span></div>
+            <p class="target-context" id="target-context" hidden></p>
+            <div class="result-divider"></div>
+            <dl class="breakdown">
+              <div><dt>قيمة شراء العقود</dt><dd id="buy-value" dir="ltr">$468.00</dd></div>
+              <div><dt>قيمة بيع العقود</dt><dd id="sale-value" dir="ltr">$555.00</dd></div>
+              <div><dt>الربح قبل العمولة</dt><dd id="gross-value" dir="ltr">$87.00</dd></div>
+              <div class="fee-line"><dt>إجمالي العمولة <span id="fee-detail">3 × 2 × $2.29</span></dt><dd id="fee-value" dir="ltr">−$13.74</dd></div>
+              <div class="net-row"><dt>صافي الربح / الخسارة</dt><dd id="net-value" dir="ltr">$73.26</dd></div>
+            </dl>
+            <p class="result-error" id="result-error" hidden>أكمل الحقول بالأرقام الصحيحة لعرض النتيجة.</p>
+            <button type="button" class="copy-button" id="copy-result"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="7" y="6" width="9" height="11" rx="2"/><path d="M12 6V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h1"/></svg><span id="copy-label">نسخ ملخص الصفقة</span></button>
+          </section>
+
+          <section class="breakeven-card card" aria-labelledby="breakeven-heading"><div class="balance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16M7 8l-4 4 4 4m10-8 4 4-4 4"/></svg></div><div><h2 id="breakeven-heading">سعر التعادل بعد العمولة</h2><p id="breakeven-note">أقل سعر مقرب يغطي تكلفة العقود والعمولات.</p></div><strong id="breakeven-value" dir="ltr">$1.61</strong></section>
+          <p class="result-footnote">نسبة العائد = صافي الربح ÷ قيمة الشراء قبل العمولة.<br>الأسعار المستهدفة تُقرّب للأعلى حسب الخطوة المختارة.</p>
+        </aside>
+      </div>
+
+      <details class="method-card"><summary><span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></svg>كيف تُحسب النتيجة؟</span><span class="details-plus" aria-hidden="true">+</span></summary><div class="method-content"><p>تعتمد الحاسبة على مضاعف <b>100</b> لعقود الأوبشن القياسية: سعر شراء 1.56 يعني 156 دولارًا للعقد قبل العمولة.</p><div class="formula">صافي الربح = (سعر البيع − سعر الشراء) × 100 × عدد العقود − إجمالي العمولة</div><p>سعر البيع المستهدف = سعر الشراء × (1 + نسبة الربح ÷ 100) + إجمالي العمولة ÷ (100 × عدد العقود). ثم يُقرّب للأعلى حسب الخطوة المختارة.</p><p>اختيار «لكل عملية شراء وبيع» يخصم 2.29 دولار للعقد مرتين؛ واختيار «للصفقة كاملة» يخصمها مرة واحدة فقط. النسب محسوبة من قيمة شراء العقود قبل العمولة.</p><p>النتائج تخص شراء العقود ثم بيع الكمية كاملة، وتشمل العمولة المحددة فقط. اختر خطوة السعر المتاحة لعقدك؛ وقد تختلف مواصفات العقود المعدلة عن العقود القياسية.</p><a href="https://www.theocc.com/clearance-and-settlement/clearing/equity-options-product-specifications" target="_blank" rel="noopener noreferrer">المصدر: مواصفات عقود الأسهم لدى OCC <span aria-hidden="true">↗</span></a></div></details>
+    </main>
+    <footer><span>حساباتك تبقى في متصفحك.</span><span>مضاعف العقد <b dir="ltr">100</b> · العمولة <b dir="ltr">$2.29</b></span></footer>
+  </div>
+  <div id="toast" class="toast" role="status" hidden>تم نسخ ملخص الصفقة</div>
+</body>
+</html>
