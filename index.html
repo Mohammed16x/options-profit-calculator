@@ -8,8 +8,8 @@
   <title>حاسبة ربح العقود</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./style.css">
-  <script type="module" src="./app.mjs?v=2"></script>
-</head>
+  <script type="module" src="./app.mjs?v=3"></script>
+<style>.platform-fee-row{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:12px;align-items:start}.platform-fee-row .field{min-width:0}.platform-fee-row select{width:100%;min-width:0;height:60px;border:1px solid #dbe3dc;border-radius:14px;background:#fff;color:#18372d;padding:0 8px;font:inherit;font-size:13px}.platform-fee-row label{font-size:12px}.platform-fee-row input{width:100%;min-width:0}</style></head>
 <body>
   <a class="skip-link" href="#calculator">انتقل إلى الحاسبة</a>
   <div class="page-shell">
@@ -44,8 +44,8 @@
           </div>
 
           <div class="commission-box">
-            <div class="field"><label for="commission">العمولة والرسوم لكل عقد — تقديرية</label><div class="input-wrap"><span class="input-unit">$</span><input id="commission" type="text" inputmode="decimal" dir="ltr" value="1.725" aria-describedby="commission-help commission-error"></div><small class="field-hint" id="commission-help">تقدير 1.725 دولار من معاينة أمر الشراء. يمكنك تعديله حسب رسوم أمرِك.</small><p id="commission-error" class="error" hidden></p></div>
-            <fieldset class="fee-fieldset"><legend>طريقة احتساب العمولة</legend><div class="fee-options"><label><input type="radio" name="fee-mode" value="both" checked><span>لكل عملية شراء وبيع</span></label><label><input type="radio" name="fee-mode" value="once"><span>للصفقة كاملة</span></label></div></fieldset>
+            <div class="platform-fee-row"><div class="field"><label for="platform">المنصة</label><select id="platform" dir="ltr"><option value="lite">Riyad Global Lite</option><option value="pro" selected>Riyad Global Pro</option><option value="custom">مخصص</option></select></div><div class="field"><label for="commission">العمولة والرسوم لكل عقد — تقديرية</label><div class="input-wrap"><span class="input-unit">$</span><input id="commission" type="text" inputmode="decimal" dir="ltr" value="1.725" aria-describedby="commission-help commission-error"></div><small class="field-hint" id="commission-help">تتغير العمولة مع المنصة، ويمكنك إدخال قيمة مخصصة.</small><p id="commission-error" class="error" hidden></p></div>
+            </div><fieldset class="fee-fieldset"><legend>طريقة احتساب العمولة</legend><div class="fee-options"><label><input type="radio" name="fee-mode" value="both" checked><span>لكل عملية شراء وبيع</span></label><label><input type="radio" name="fee-mode" value="once"><span>للصفقة كاملة</span></label></div></fieldset>
             <p class="fee-explanation" id="fee-explanation">تقدير الشراء 1.725 دولار للعقد؛ نفترض مثله للبيع وقد تختلف الرسوم الفعلية.</p>
           </div>
 
