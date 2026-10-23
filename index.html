@@ -8,7 +8,7 @@
   <title>حاسبة ربح العقود</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./style.css">
-  <script type="module" src="./app.mjs"></script>
+  <script type="module" src="./app.mjs?v=2"></script>
 </head>
 <body>
   <a class="skip-link" href="#calculator">انتقل إلى الحاسبة</a>
@@ -44,9 +44,9 @@
           </div>
 
           <div class="commission-box">
-            <div class="commission-top"><div><span class="label">عمولة العقد الواحد</span><span class="fixed-badge"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="4" y="7" width="8" height="6" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>ثابتة</span></div><strong dir="ltr">$2.29</strong></div>
+            <div class="field"><label for="commission">العمولة والرسوم لكل عقد — تقديرية</label><div class="input-wrap"><span class="input-unit">$</span><input id="commission" type="text" inputmode="decimal" dir="ltr" value="1.725" aria-describedby="commission-help commission-error"></div><small class="field-hint" id="commission-help">تقدير 1.725 دولار من معاينة أمر الشراء. يمكنك تعديله حسب رسوم أمرِك.</small><p id="commission-error" class="error" hidden></p></div>
             <fieldset class="fee-fieldset"><legend>طريقة احتساب العمولة</legend><div class="fee-options"><label><input type="radio" name="fee-mode" value="both" checked><span>لكل عملية شراء وبيع</span></label><label><input type="radio" name="fee-mode" value="once"><span>للصفقة كاملة</span></label></div></fieldset>
-            <p class="fee-explanation" id="fee-explanation">2.29 دولار عند الشراء + 2.29 دولار عند البيع، لكل عقد.</p>
+            <p class="fee-explanation" id="fee-explanation">تقدير الشراء 1.725 دولار للعقد؛ نفترض مثله للبيع وقد تختلف الرسوم الفعلية.</p>
           </div>
 
           <div class="section-heading second-heading"><div><span class="section-index">02</span><h2>ماذا تريد أن تحسب؟</h2></div></div>
@@ -72,29 +72,29 @@
         <aside class="results-column" aria-label="نتيجة الحساب">
           <section class="result-card" id="result-card" aria-live="polite" aria-atomic="true">
             <div class="result-topline"><span id="result-title">صافي الربح بعد العمولة</span><span class="result-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m5 16 6-6 4 4 5-8M15 6h5v5"/></svg></span></div>
-            <div class="headline-number" dir="ltr"><span class="dollar">$</span><span id="headline">73.26</span></div>
-            <div class="result-subline"><span class="return-badge" id="return-badge" dir="ltr">+15.65%</span><span id="return-label">عائد صافٍ على قيمة الشراء</span></div>
+            <div class="headline-number" dir="ltr"><span class="dollar">$</span><span id="headline">76.65</span></div>
+            <div class="result-subline"><span class="return-badge" id="return-badge" dir="ltr">+16.38%</span><span id="return-label">عائد صافٍ على قيمة الشراء</span></div>
             <p class="target-context" id="target-context" hidden></p>
             <div class="result-divider"></div>
             <dl class="breakdown">
               <div><dt>قيمة شراء العقود</dt><dd id="buy-value" dir="ltr">$468.00</dd></div>
               <div><dt>قيمة بيع العقود</dt><dd id="sale-value" dir="ltr">$555.00</dd></div>
               <div><dt>الربح قبل العمولة</dt><dd id="gross-value" dir="ltr">$87.00</dd></div>
-              <div class="fee-line"><dt>إجمالي العمولة <span id="fee-detail">3 × 2 × $2.29</span></dt><dd id="fee-value" dir="ltr">−$13.74</dd></div>
-              <div class="net-row"><dt>صافي الربح / الخسارة</dt><dd id="net-value" dir="ltr">$73.26</dd></div>
+              <div class="fee-line"><dt>إجمالي العمولة <span id="fee-detail">3 × 2 × $1.725</span></dt><dd id="fee-value" dir="ltr">−$10.35</dd></div>
+              <div class="net-row"><dt>صافي الربح / الخسارة</dt><dd id="net-value" dir="ltr">$76.65</dd></div>
             </dl>
             <p class="result-error" id="result-error" hidden>أكمل الحقول بالأرقام الصحيحة لعرض النتيجة.</p>
             <button type="button" class="copy-button" id="copy-result"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="7" y="6" width="9" height="11" rx="2"/><path d="M12 6V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h1"/></svg><span id="copy-label">نسخ ملخص الصفقة</span></button>
           </section>
 
-          <section class="breakeven-card card" aria-labelledby="breakeven-heading"><div class="balance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16M7 8l-4 4 4 4m10-8 4 4-4 4"/></svg></div><div><h2 id="breakeven-heading">سعر التعادل بعد العمولة</h2><p id="breakeven-note">أقل سعر مقرب يغطي تكلفة العقود والعمولات.</p></div><strong id="breakeven-value" dir="ltr">$1.61</strong></section>
+          <section class="breakeven-card card" aria-labelledby="breakeven-heading"><div class="balance-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16M7 8l-4 4 4 4m10-8 4 4-4 4"/></svg></div><div><h2 id="breakeven-heading">سعر التعادل بعد العمولة</h2><p id="breakeven-note">أقل سعر مقرب يغطي تكلفة العقود والعمولات.</p></div><strong id="breakeven-value" dir="ltr">$1.60</strong></section>
           <p class="result-footnote">نسبة العائد = صافي الربح ÷ قيمة الشراء قبل العمولة.<br>الأسعار المستهدفة تُقرّب للأعلى حسب الخطوة المختارة.</p>
         </aside>
       </div>
 
-      <details class="method-card"><summary><span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></svg>كيف تُحسب النتيجة؟</span><span class="details-plus" aria-hidden="true">+</span></summary><div class="method-content"><p>تعتمد الحاسبة على مضاعف <b>100</b> لعقود الأوبشن القياسية: سعر شراء 1.56 يعني 156 دولارًا للعقد قبل العمولة.</p><div class="formula">صافي الربح = (سعر البيع − سعر الشراء) × 100 × عدد العقود − إجمالي العمولة</div><p>سعر البيع المستهدف = سعر الشراء × (1 + نسبة الربح ÷ 100) + إجمالي العمولة ÷ (100 × عدد العقود). ثم يُقرّب للأعلى حسب الخطوة المختارة.</p><p>اختيار «لكل عملية شراء وبيع» يخصم 2.29 دولار للعقد مرتين؛ واختيار «للصفقة كاملة» يخصمها مرة واحدة فقط. النسب محسوبة من قيمة شراء العقود قبل العمولة.</p><p>النتائج تخص شراء العقود ثم بيع الكمية كاملة، وتشمل العمولة المحددة فقط. اختر خطوة السعر المتاحة لعقدك؛ وقد تختلف مواصفات العقود المعدلة عن العقود القياسية.</p><a href="https://www.theocc.com/clearance-and-settlement/clearing/equity-options-product-specifications" target="_blank" rel="noopener noreferrer">المصدر: مواصفات عقود الأسهم لدى OCC <span aria-hidden="true">↗</span></a></div></details>
+      <details class="method-card"><summary><span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></svg>كيف تُحسب النتيجة؟</span><span class="details-plus" aria-hidden="true">+</span></summary><div class="method-content"><p>تعتمد الحاسبة على مضاعف <b>100</b> لعقود الأوبشن القياسية: سعر شراء 1.56 يعني 156 دولارًا للعقد قبل العمولة.</p><div class="formula">صافي الربح = (سعر البيع − سعر الشراء) × 100 × عدد العقود − إجمالي العمولة</div><p>سعر البيع المستهدف = سعر الشراء × (1 + نسبة الربح ÷ 100) + إجمالي العمولة ÷ (100 × عدد العقود). ثم يُقرّب للأعلى حسب الخطوة المختارة.</p><p>اختيار «لكل عملية شراء وبيع» يخصم العمولة المدخلة للعقد مرتين؛ واختيار «للصفقة كاملة» يخصمها مرة واحدة فقط. النسب محسوبة من قيمة شراء العقود قبل العمولة.</p><p>النتائج تخص شراء العقود ثم بيع الكمية كاملة، وتشمل العمولة المحددة فقط. يتم تقريب إجمالي الرسوم إلى أقرب سنت؛ قد تظهر فروق بسيطة عن معاينة الوسيط. اختر خطوة السعر المتاحة لعقدك؛ وقد تختلف مواصفات العقود المعدلة عن العقود القياسية.</p><a href="https://www.theocc.com/clearance-and-settlement/clearing/equity-options-product-specifications" target="_blank" rel="noopener noreferrer">المصدر: مواصفات عقود الأسهم لدى OCC <span aria-hidden="true">↗</span></a></div></details>
     </main>
-    <footer><span>حساباتك تبقى في متصفحك.</span><span>مضاعف العقد <b dir="ltr">100</b> · العمولة <b dir="ltr">$2.29</b></span></footer>
+    <footer><span>حساباتك تبقى في متصفحك.</span><span>مضاعف العقد <b dir="ltr">100</b> · العمولة قابلة للتعديل</span></footer>
   </div>
   <div id="toast" class="toast" role="status" hidden>تم نسخ ملخص الصفقة</div>
 </body>
