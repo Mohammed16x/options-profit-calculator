@@ -1,4 +1,4 @@
-import { compute, normalizeNumber, parseDecimal } from './math.mjs?v=2';
+import { compute, normalizeNumber, parseDecimal } from './math.mjs?v=5';
 
 const platformRates = { lite: '2.29', pro: '1.725' };
 const defaults = { platform: 'pro', commission: '1.725', buy: '1.56', quantity: '3', sell: '1.85', target: '25', tick: '0.01', feeMode: 'both', mode: 'sell' };
@@ -52,6 +52,13 @@ function setMode(next, shouldRender = true) {
 }
 
 function render() {
+  const isIbkr = byId('platform')?.value === 'ibkr';
+  byId('commission').readOnly = isIbkr;
+  if (isIbkr) byId('commission').value = parseDecimal(byId('quantity').value, 0) === 1n ? '1.00' : '0.65';
+  for (const input of document.querySelectorAll('input[name="fee-mode"]')) {
+    input.disabled = isIbkr;
+    if (isIbkr) input.checked = input.value === 'both';
+  }
   const raw = getRaw();
   current = compute(raw);
   for (const id of ['buy', 'quantity', 'sell', 'target', 'commission']) {
@@ -66,6 +73,7 @@ function render() {
   text('fee-explanation', raw.feeMode === 'both'
     ? `تقدير: ${normalizeNumber(raw.commission)} دولار لكل عقد عند الشراء ومثلها عند البيع. رسوم البيع مفترضة وقد تختلف.`
     : `تقدير: ${normalizeNumber(raw.commission)} دولار لكل عقد للصفقة كاملة.`);
+  if (isIbkr) text('fee-explanation', 'IBKR: 0.65 دولار لكل عقد، بحد أدنى 1 دولار لكل أمر شراء أو بيع. الحساب حسب الإعداد المحدد، دون أي رسوم إضافية.');
   byId('decrease').disabled = parseDecimal(raw.quantity, 0) === 1n;
   byId('increase').disabled = parseDecimal(raw.quantity, 0) === 100000n;
   const card = byId('result-card');
@@ -111,7 +119,7 @@ function render() {
 }
 
 function hydrate(values) {
-  if (byId('platform')) byId('platform').value = ['lite', 'pro', 'custom'].includes(values.platform) ? values.platform : Number(values.commission) === 2.29 ? 'lite' : Number(values.commission ?? defaults.commission) === 1.725 ? 'pro' : 'custom';
+  if (byId('platform')) byId('platform').value = ['lite', 'pro', 'ibkr', 'custom'].includes(values.platform) ? values.platform : Number(values.commission) === 2.29 ? 'lite' : Number(values.commission ?? defaults.commission) === 1.725 ? 'pro' : 'custom';
   for (const id of ids) byId(id).value = typeof values[id] === 'string' ? values[id] : defaults[id];
   if (!['0.01', '0.05', '0.10'].includes(byId('tick').value)) byId('tick').value = '0.01';
   for (const input of document.querySelectorAll('input[name="fee-mode"]')) input.checked = input.value === (values.feeMode === 'once' ? 'once' : 'both');
@@ -167,7 +175,7 @@ byId('copy-result').addEventListener('click', async () => {
   const result = current.result;
   const summary = [
     'ملخص صفقة الأوبشن',
-    `المنصة: ${raw.platform === 'lite' ? 'Riyad Global Lite' : raw.platform === 'pro' ? 'Riyad Global Pro' : 'مخصص'}`,
+    `المنصة: ${raw.platform === 'ibkr' ? 'IBKR' : raw.platform === 'lite' ? 'Riyad Global Lite' : raw.platform === 'pro' ? 'Riyad Global Pro' : 'مخصص'}`,
     `سعر الشراء: $${price(current.values.buyUnits)}`,
     `سعر البيع: $${price(result.sellUnits)}`,
     `عدد العقود: ${current.values.quantity} | المضاعف: 100`,
