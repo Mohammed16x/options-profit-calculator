@@ -20,7 +20,7 @@ export function parseDecimal(value, places = 4) {
 
 export function validate(raw) {
   const errors = {};
-  const commissionUnits = parseDecimal(raw.commission ?? DEFAULT_COMMISSION);
+  const commissionUnits = raw.platform === 'ibkr' ? (parseDecimal(raw.quantity, 0) === 1n ? 10000n : 6500n) : parseDecimal(raw.commission ?? DEFAULT_COMMISSION);
   if (commissionUnits === null || commissionUnits > 10000000n) errors.commission = 'أدخل عمولة من صفر إلى 1000 دولار، بحد أقصى 4 منازل عشرية.';
   const buyUnits = parseDecimal(raw.buy);
   const quantity = parseDecimal(raw.quantity, 0);
@@ -39,7 +39,7 @@ export function validate(raw) {
     errors.target = 'أدخل نسبة من 0% إلى 10,000%، بحد أقصى منزلتين عشريتين.';
   if (![100n, 500n, 1000n].includes(tickUnits)) errors.tick = 'اختر خطوة سعر صالحة.';
   if (Object.keys(errors).length) return { errors, values: null };
-  return { errors, values: { commissionUnits, buyUnits, quantity, sellUnits, targetBps, tickUnits, feeMode: raw.feeMode, mode: raw.mode } };
+  return { errors, values: { commissionUnits, buyUnits, quantity, sellUnits, targetBps, tickUnits, feeMode: raw.platform === 'ibkr' ? 'both' : raw.feeMode, mode: raw.mode } };
 }
 
 const ceilDiv = (value, divisor) => (value + divisor - 1n) / divisor;
