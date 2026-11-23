@@ -1,10 +1,10 @@
 import { compute, normalizeNumber, parseDecimal } from './math.mjs?v=5';
 
 const platformRates = { lite: '2.29', pro: '1.725' };
-const defaults = { platform: 'pro', commission: '1.725', buy: '1.56', quantity: '3', sell: '1.85', target: '25', tick: '0.01', feeMode: 'both', mode: 'sell' };
+const defaults = { platform: 'pro', commission: '1.725', buy: '1.56', quantity: '3', sell: '1.85', stop: '1.43', target: '25', tick: '0.01', feeMode: 'both', mode: 'sell' };
 const storageKey = 'options-profit-calculator:v1';
 const byId = id => document.getElementById(id);
-const ids = ['buy', 'quantity', 'sell', 'target', 'tick', 'commission'];
+const ids = ['buy', 'quantity', 'sell', 'target', 'tick', 'commission', 'stop'];
 const integerFormatter = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
 const priceFormatter = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
 const percentFormatter = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -61,6 +61,15 @@ function render() {
   }
   const raw = getRaw();
   current = compute(raw);
+  const stopResult = compute({ ...raw, mode: 'sell', sell: raw.stop });
+  const stopError = stopResult.errors.sell;
+  byId('stop').setAttribute('aria-invalid', String(Boolean(stopError)));
+  byId('stop-error').hidden = !stopError;
+  text('stop-error', stopError ? 'أدخل سعر وقف يساوي صفرًا أو أكثر، بحد أقصى 4 منازل عشرية.' : '');
+  text('stop-label', stopResult.result?.netCents > 0n ? 'صافي الربح عند الوقف' : 'الخسارة عند وقف الخسارة');
+  text('stop-value', stopResult.result ? money(stopResult.result.netCents) : '—');
+  text('stop-sar', stopResult.result ? sar(stopResult.result.netCents) : '—');
+  byId('stop-row').classList.toggle('stop-profit', Boolean(stopResult.result && stopResult.result.netCents > 0n));
   for (const id of ['buy', 'quantity', 'sell', 'target', 'commission']) {
     const message = current.errors[id];
     byId(id).setAttribute('aria-invalid', String(Boolean(message)));
@@ -183,6 +192,10 @@ byId('copy-result').addEventListener('click', async () => {
     `إجمالي العمولة: ${money(result.feeCents)}`,
     `صافي الربح / الخسارة: ${money(result.netCents)}`,
     `بالريال السعودي: ${sar(result.netCents)} (1 دولار = 3.75 ريال، دون رسوم تحويل)`,
+    ...(compute({ ...raw, mode: 'sell', sell: raw.stop }).result ? [
+      `سعر وقف الخسارة: ${price(parseDecimal(raw.stop))}`,
+      `الصافي عند الوقف بعد العمولة: ${money(compute({ ...raw, mode: 'sell', sell: raw.stop }).result.netCents)} | ${sar(compute({ ...raw, mode: 'sell', sell: raw.stop }).result.netCents)}`
+    ] : []),
     `العائد الصافي: ${percent(result.returnPct)} من قيمة الشراء قبل العمولة`,
     ...(mode === 'target' ? [`الهدف: ${normalizeNumber(raw.target)}% | خطوة تقريب سعر البيع: $${raw.tick}`] : [])
   ].join('\n');
