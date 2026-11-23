@@ -8,8 +8,8 @@
   <title>حاسبة ربح العقود</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./style.css">
-  <script type="module" src="./app.mjs?v=5"></script>
-<style>.platform-fee-row{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:12px;align-items:start}.platform-fee-row .field{min-width:0}.platform-fee-row select{width:100%;min-width:0;height:60px;border:1px solid #dbe3dc;border-radius:14px;background:#fff;color:#18372d;padding:0 8px;font:inherit;font-size:13px}.platform-fee-row label{font-size:12px}.platform-fee-row input{width:100%;min-width:0}</style><style>.net-sar{display:block;font-size:15px;font-weight:500;line-height:1.6;margin-top:5px;color:#c5d5c8;text-align:left}</style></head>
+  <script type="module" src="./app.mjs?v=6"></script>
+<style>.platform-fee-row{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:12px;align-items:start}.platform-fee-row .field{min-width:0}.platform-fee-row select{width:100%;min-width:0;height:60px;border:1px solid #dbe3dc;border-radius:14px;background:#fff;color:#18372d;padding:0 8px;font:inherit;font-size:13px}.platform-fee-row label{font-size:12px}.platform-fee-row input{width:100%;min-width:0}</style><style>.net-sar{display:block;font-size:15px;font-weight:500;line-height:1.6;margin-top:5px;color:#c5d5c8;text-align:left}</style><style>.stop-field{margin-top:18px}.breakdown .stop-row{border-top:1px solid #ffffff24;padding-top:15px;margin-top:8px}.stop-row dd,.stop-row .net-sar{color:#ffb2a8}.stop-row.stop-profit dd,.stop-row.stop-profit .net-sar{color:#c8ef93}</style></head>
 <body>
   <a class="skip-link" href="#calculator">انتقل إلى الحاسبة</a>
   <div class="page-shell">
@@ -66,6 +66,12 @@
             <p class="error" id="target-error" hidden></p>
             <p class="field-hint" id="target-help">بعد خصم العمولة، كنسبة من قيمة شراء العقود قبل العمولة.</p>
           </div>
+          <div class="field stop-field">
+            <label for="stop">سعر وقف الخسارة</label>
+            <div class="input-wrap"><span class="input-unit">$</span><input id="stop" name="stop" type="text" inputmode="decimal" dir="ltr" value="1.43" placeholder="1.43" autocomplete="off" aria-describedby="stop-help stop-error"></div>
+            <small class="field-hint" id="stop-help">يمكنك تعديله، ويُحفظ مع إعداداتك. الحساب يفترض البيع بهذا السعر.</small>
+            <p class="error" id="stop-error" hidden></p>
+          </div>
           <div class="rounding-row"><label for="tick">خطوة تقريب سعر البيع <span>للأهداف والتعادل</span></label><select id="tick" name="tick" dir="ltr"><option value="0.01">$0.01</option><option value="0.05">$0.05</option><option value="0.10">$0.10</option></select></div>
         </section>
 
@@ -82,6 +88,7 @@
               <div><dt>الربح قبل العمولة</dt><dd id="gross-value" dir="ltr">$87.00</dd></div>
               <div class="fee-line"><dt>إجمالي العمولة <span id="fee-detail">3 × 2 × $1.725</span></dt><dd id="fee-value" dir="ltr">−$10.35</dd></div>
               <div class="net-row"><dt>صافي الربح / الخسارة</dt><dd dir="ltr"><span id="net-value">$76.65</span><small id="net-sar" class="net-sar" dir="rtl">287.44 ر.س</small></dd></div>
+              <div class="stop-row" id="stop-row"><dt id="stop-label">الخسارة عند وقف الخسارة</dt><dd dir="ltr"><span id="stop-value">—</span><small id="stop-sar" class="net-sar" dir="rtl">—</small></dd></div>
             </dl>
             <p class="result-error" id="result-error" hidden>أكمل الحقول بالأرقام الصحيحة لعرض النتيجة.</p>
             <button type="button" class="copy-button" id="copy-result"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="7" y="6" width="9" height="11" rx="2"/><path d="M12 6V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h1"/></svg><span id="copy-label">نسخ ملخص الصفقة</span></button>
